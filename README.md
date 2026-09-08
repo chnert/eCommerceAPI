@@ -7,6 +7,7 @@ The project is structured around controllers, services, repositories, and middle
 ## Current Features
 
 * JWT-based authentication
+* User registration with password hashing
 * Product listing
 * Product creation
 * Product stock management
@@ -18,13 +19,14 @@ The project is structured around controllers, services, repositories, and middle
 
 ## API Endpoints
 
-| Method | Endpoint    | Description             |
-| ------ | ----------- | ----------------------- |
-| `POST` | `/login`    | Login and receive a JWT |
-| `GET`  | `/products` | Get available products  |
-| `POST` | `/products` | Create a product        |
-| `POST` | `/checkout` | Create an order         |
-| `GET`  | `/orders`   | Get orders              |
+| Method | Endpoint    | Description              |
+| ------ | ----------- | ------------------------ |
+| `POST` | `/register` | Register a new user      |
+| `POST` | `/login`    | Login and receive a JWT  |
+| `GET`  | `/products` | Get available products   |
+| `POST` | `/products` | Create a product         |
+| `POST` | `/checkout` | Create an order          |
+| `GET`  | `/orders`   | Get orders               |
 
 ## Project Structure
 
@@ -89,8 +91,8 @@ The server runs on `http://localhost:8080` by default.
 
 The API is still under development. Planned additions include:
 
-* Proper user registration and authentication
-* Password hashing
+* Connect login to real registered users (password verification against stored hash)
+* Extract authenticated user ID from JWT claims and use it across protected routes
 * User roles and authorization
 * Product update and deletion
 * Shopping cart functionality
