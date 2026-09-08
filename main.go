@@ -55,9 +55,14 @@ func main() {
 	orderService := &services.OrderService{Repo: orderRepo}
 	orderController := &controllers.OrderController{Service: orderService}
 
+	userRepo := &repository.UserRepo{DB: db}
+	userService := &services.UserService{Repo: userRepo}
+	userController := &controllers.UserController{Service: userService}
+
 	authController := &controllers.AuthController{}
 
 	// Public Routes(No auth required)
+	http.HandleFunc("POST /register", middleware.Logging(userController.RegisterHandler))
 	http.HandleFunc("POST /login", middleware.Logging(authController.LoginHandler))
 	http.HandleFunc("GET /products", middleware.Logging(productController.GetProductsHandler))
 

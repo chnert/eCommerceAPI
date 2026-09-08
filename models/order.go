@@ -13,6 +13,6 @@ type CheckoutItem struct {
 
 type OrderResponse struct {
 	ID          int     `json:"id"`
-	TotalAmount float64 `json: "total_amount"`
-	Status      string  `json: "status"`
+	TotalAmount float64 `json:"total_amount"`
+	Status      string  `json:"status"`
 }

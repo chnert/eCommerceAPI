@@ -43,7 +43,7 @@ func (c *AuthController) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Send the token to the client
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
+	_ = json.NewEncoder(w).Encode(map[string]string{
 		"token": tokenString,
 	})
 }

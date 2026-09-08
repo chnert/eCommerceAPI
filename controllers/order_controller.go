@@ -19,6 +19,7 @@ func (c *OrderController) CheckoutHandler(w http.ResponseWriter, r *http.Request
 	// Parse the JSON body
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid JSON format.", http.StatusBadRequest)
+		return
 	}
 
 	// Call the service layer
@@ -31,7 +32,7 @@ func (c *OrderController) CheckoutHandler(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(http.StatusBadRequest)
 
 		// Wrap the error string in a JSON object and send it
-		json.NewEncoder(w).Encode(map[string]string{
+		_ = json.NewEncoder(w).Encode(map[string]string{
 			"error": err.Error(),
 		})
 		return
@@ -40,7 +41,7 @@ func (c *OrderController) CheckoutHandler(w http.ResponseWriter, r *http.Request
 	// Success Resonse
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated) // HTTP 201
-	json.NewEncoder(w).Encode(map[string]string{
+	_ = json.NewEncoder(w).Encode(map[string]string{
 		"message": "Order placed successfully.",
 	})
 }
