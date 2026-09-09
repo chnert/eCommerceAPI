@@ -4,10 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 	"net/mail"
+	"os"
+	"time"
 
 	"eCommerceAPI/models"
 	"eCommerceAPI/repository"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -52,4 +55,29 @@ func (s *UserService) RegisterUser(email string, password string) (models.User, 
 	}
 
 	return createdUser, nil
+}
+
+func (s *UserService) LoginUser(email string, password string) (string, error) {
+	user, err := s.Repo.GetByEmail(email)
+	if err != nil {
+		return "", fmt.Errorf("invalid credentials")
+	}
+
+	if bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)) != nil {
+		return "", fmt.Errorf("invalid credentials")
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.ID,
+		"exp":     time.Now().Add(time.Hour * 24).Unix(),
+	})
+
+	secretKey := os.Getenv("JWT_SECRET")
+
+	tokenString, err := token.SignedString([]byte(secretKey))
+	if err != nil {
+		return "", fmt.Errorf("failed to create token")
+	}
+
+	return tokenString, nil
 }

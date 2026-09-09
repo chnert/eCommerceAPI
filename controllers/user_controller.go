@@ -32,5 +32,32 @@ func (c *UserController) RegisterHandler(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newUser)
+	_ = json.NewEncoder(w).Encode(newUser)
+}
+
+func (c *UserController) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	type UserInfo struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	type TokenResponse struct {
+		Token string `json:"token"`
+	}
+	var u UserInfo
+
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		http.Error(w, "Invalid JSON input", http.StatusBadRequest)
+		return
+	}
+
+	token, err := c.Service.LoginUser(u.Email, u.Password)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(TokenResponse{Token: token})
 }
